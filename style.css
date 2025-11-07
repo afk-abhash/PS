@@ -1,0 +1,413 @@
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #4b5563;
+    overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Star Background */
+.stars-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #fce7f3 0%, #e0f2fe 100%);
+    z-index: -2;
+}
+
+.stars-background::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+        radial-gradient(2px 2px at 60px 70px, #fff, transparent),
+        radial-gradient(1px 1px at 50px 50px, #fff, transparent),
+        radial-gradient(1px 1px at 130px 80px, #fff, transparent),
+        radial-gradient(2px 2px at 90px 10px, #fff, transparent);
+    background-size: 200px 200px;
+    background-repeat: repeat;
+    opacity: 0.6;
+    animation: twinkle 3s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 0.3; }
+}
+
+/* Landing Page */
+.landing-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.landing-container {
+    text-align: center;
+    padding: 2rem;
+    max-width: 600px;
+}
+
+.title {
+    font-size: 3rem;
+    font-weight: 600;
+    color: #ec4899;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+}
+
+.subtitle {
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: #6b7280;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.enter-button {
+    margin-top: 3rem;
+    padding: 1rem 3rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: white;
+    background: linear-gradient(135deg, #f9a8d4 0%, #ec4899 100%);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(236, 72, 153, 0.3);
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+.enter-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(236, 72, 153, 0.4);
+}
+
+/* Universe Page */
+.universe-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+.universe-container {
+    text-align: center;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.universe-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #ec4899;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+}
+
+.universe-subtitle {
+    font-size: 1.2rem;
+    font-weight: 300;
+    color: #6b7280;
+    margin-bottom: 3rem;
+}
+
+.planets-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 3rem;
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.planet {
+    width: 150px;
+    height: 150px;
+    background: linear-gradient(135deg, #fbcfe8 0%, #f9a8d4 100%);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: #4b5563;
+    box-shadow: 0 10px 30px rgba(251, 207, 232, 0.5);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.planet::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(251, 207, 232, 0.4) 0%, transparent 70%);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.planet:hover::before {
+    opacity: 1;
+}
+
+.planet:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 15px 40px rgba(251, 207, 232, 0.7);
+}
+
+.planet-emoji {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.planet-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 0 0.5rem;
+}
+
+/* Scene Pages */
+.scene-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+.scene-container {
+    text-align: center;
+    max-width: 700px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    padding: 3rem 2rem;
+    box-shadow: 0 20px 60px rgba(236, 72, 153, 0.2);
+}
+
+.scene-emoji {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.scene-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #ec4899;
+    margin-bottom: 0.5rem;
+}
+
+.scene-date {
+    font-size: 1rem;
+    color: #9ca3af;
+    font-weight: 300;
+    margin-bottom: 2rem;
+}
+
+.scene-content {
+    font-size: 1.2rem;
+    line-height: 2;
+    color: #4b5563;
+    margin-bottom: 2rem;
+}
+
+.scene-content p {
+    margin-bottom: 1rem;
+}
+
+.final-message {
+    font-size: 1.3rem;
+    font-weight: 400;
+}
+
+.back-button {
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ec4899;
+    background: white;
+    border: 2px solid #f9a8d4;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+    margin-top: 1rem;
+}
+
+.back-button:hover {
+    background: #fce7f3;
+    transform: translateY(-2px);
+}
+
+.special-button {
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    background: linear-gradient(135deg, #f9a8d4 0%, #ec4899 100%);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(236, 72, 153, 0.3);
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 2rem;
+}
+
+.special-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(236, 72, 153, 0.4);
+}
+
+.adventure-message {
+    font-size: 1.3rem;
+    color: #ec4899;
+    font-weight: 600;
+    margin: 2rem 0;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.5s ease;
+}
+
+.adventure-message.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 1s ease-out;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+.float {
+    animation: float 3s ease-in-out infinite;
+}
+
+.planet-1 { animation-delay: 0s; }
+.planet-2 { animation-delay: 0.5s; }
+.planet-3 { animation-delay: 0.75s; }
+.planet-4 { animation-delay: 1s; }
+.planet-5 { animation-delay: 1.5s; }
+.planet-6 { animation-delay: 2s; }
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.pulse {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Home Button */
+.home-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    padding: 0.8rem 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    background: linear-gradient(135deg, #f9a8d4 0%, #ec4899 100%);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 5px 20px rgba(236, 72, 153, 0.3);
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+    z-index: 1000;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.home-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(236, 72, 153, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .title {
+        font-size: 2rem;
+    }
+    
+    .subtitle {
+        font-size: 1.2rem;
+    }
+    
+    .universe-title {
+        font-size: 2rem;
+    }
+    
+    .planet {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .planet-emoji {
+        font-size: 2.5rem;
+    }
+    
+    .scene-title {
+        font-size: 2rem;
+    }
+    
+    .scene-content {
+        font-size: 1rem;
+    }
+    
+    .home-button {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+}
+

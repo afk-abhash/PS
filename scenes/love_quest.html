@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quest 💖</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .game-container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .game-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #ec4899;
+            margin-bottom: 0.5rem;
+        }
+
+        .game-instructions {
+            font-size: 1rem;
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        #gameCanvas {
+            display: block;
+            margin: 0 auto 20px;
+            background: #fde2e4;
+            border: 4px solid #f9a8d4;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(236, 72, 153, 0.3);
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        #messageOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        #messageOverlay.hidden {
+            display: none;
+        }
+
+        #messageOverlay h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            color: #ec4899;
+            margin-bottom: 2rem;
+            text-align: center;
+            padding: 0 2rem;
+            max-width: 600px;
+        }
+
+        #continueBtn {
+            background: linear-gradient(135deg, #f9a8d4 0%, #ec4899 100%);
+            border: none;
+            padding: 1rem 3rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 10px 30px rgba(236, 72, 153, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        #continueBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(236, 72, 153, 0.4);
+        }
+
+        #revealButton {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(135deg, #f9a8d4 0%, #ec4899 100%);
+            border: none;
+            padding: 1.5rem 3rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 15px 50px rgba(236, 72, 153, 0.5);
+            z-index: 600;
+            transition: all 0.4s ease;
+            opacity: 0;
+        }
+
+        #revealButton.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        #revealButton:hover {
+            transform: translate(-50%, -50%) scale(1.05);
+            box-shadow: 0 20px 60px rgba(236, 72, 153, 0.6);
+        }
+
+        .hearts-counter {
+            font-size: 1.2rem;
+            color: #ec4899;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        #flirtyMessage {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 30px;
+            border-radius: 15px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ec4899;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 500;
+            box-shadow: 0 10px 30px rgba(236, 72, 153, 0.3);
+            border: 2px solid #f9a8d4;
+            max-width: 80%;
+            pointer-events: none;
+        }
+
+        #flirtyMessage.show-message {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            #gameCanvas {
+                width: 100%;
+                height: auto;
+            }
+            
+            #flirtyMessage {
+                font-size: 0.9rem;
+                padding: 12px 20px;
+            }
+        }
+    </style>
+</head>
+<body class="scene-page">
+    <div class="stars-background"></div>
+    
+    <a href="../index.html" class="home-button">🏠 Home</a>
+    
+    <div id="flirtyMessage"></div>
+    
+    <button id="revealButton">✨ Reveal Secret Message ✨</button>
+    
+    <div class="game-container fade-in">
+        <h1 class="game-title">💖 Love Quest 💖</h1>
+        <p class="game-instructions">Use Arrow Keys or WASD to move and collect all the hearts!</p>
+        <div class="hearts-counter" id="heartsCounter">👨 Hearts Collected: 0 / 5</div>
+        
+        <canvas id="gameCanvas" width="600" height="400"></canvas>
+        
+        <button class="back-button" onclick="window.location.href='../universe.html'">
+            ← Back to Universe
+        </button>
+    </div>
+
+    <div id="messageOverlay" class="hidden">
+        <h2>You found every piece of my heart 💖</h2>
+        <button id="continueBtn">Continue to Next Planet</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const heartsCounter = document.getElementById('heartsCounter');
+        const messageOverlay = document.getElementById('messageOverlay');
+        const continueBtn = document.getElementById('continueBtn');
+        const flirtyMessageDiv = document.getElementById('flirtyMessage');
+        const revealButton = document.getElementById('revealButton');
+
+        // Flirty messages to display when collecting hearts
+        const flirtyMessages = [
+            "You stole another piece of my heart 💘",
+            "Careful — I might start liking this 😏",
+            "You make collecting hearts too easy 💕",
+            "If love were a game, you'd be the cheat code 🎮",
+            "Another one? You're unstoppable 😍",
+            "My heart respawns whenever you smile 💫",
+            "Stop being so cute, I'm losing focus 💓",
+            "Every pixel of me likes you 💗"
+        ];
+
+        // Game state
+        const player = {
+            x: 50,
+            y: 50,
+            size: 20,
+            speed: 3,
+            color: '#ec4899'
+        };
+
+        const keys = {
+            ArrowUp: false,
+            ArrowDown: false,
+            ArrowLeft: false,
+            ArrowRight: false,
+            w: false,
+            a: false,
+            s: false,
+            d: false
+        };
+
+        let hearts = [];
+        let collectedHearts = 0;
+        const totalHearts = 5;
+
+        // Initialize hearts at random positions
+        function initHearts() {
+            hearts = [];
+            for (let i = 0; i < totalHearts; i++) {
+                hearts.push({
+                    x: Math.random() * (canvas.width - 40) + 20,
+                    y: Math.random() * (canvas.height - 40) + 20,
+                    size: 15,
+                    collected: false
+                });
+            }
+        }
+
+        // Draw heart shape
+        function drawHeart(x, y, size) {
+            ctx.fillStyle = '#f472b6';
+            ctx.beginPath();
+            const topCurveHeight = size * 0.3;
+            ctx.moveTo(x, y + topCurveHeight);
+            // Left curve
+            ctx.bezierCurveTo(
+                x, y, 
+                x - size / 2, y, 
+                x - size / 2, y + topCurveHeight
+            );
+            ctx.bezierCurveTo(
+                x - size / 2, y + (size + topCurveHeight) / 2, 
+                x, y + (size + topCurveHeight) / 2, 
+                x, y + size
+            );
+            // Right curve
+            ctx.bezierCurveTo(
+                x, y + (size + topCurveHeight) / 2, 
+                x + size / 2, y + (size + topCurveHeight) / 2, 
+                x + size / 2, y + topCurveHeight
+            );
+            ctx.bezierCurveTo(
+                x + size / 2, y, 
+                x, y, 
+                x, y + topCurveHeight
+            );
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        // Draw player (cute circle with eyes)
+        function drawPlayer() {
+            // Body
+            ctx.fillStyle = player.color;
+            ctx.beginPath();
+            ctx.arc(player.x + player.size/2, player.y + player.size/2, player.size/2, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Eyes
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(player.x + player.size/2 - 5, player.y + player.size/2 - 3, 3, 0, Math.PI * 2);
+            ctx.arc(player.x + player.size/2 + 5, player.y + player.size/2 - 3, 3, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Pupils
+            ctx.fillStyle = 'black';
+            ctx.beginPath();
+            ctx.arc(player.x + player.size/2 - 5, player.y + player.size/2 - 3, 1.5, 0, Math.PI * 2);
+            ctx.arc(player.x + player.size/2 + 5, player.y + player.size/2 - 3, 1.5, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Smile
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(player.x + player.size/2, player.y + player.size/2 + 2, 5, 0, Math.PI);
+            ctx.stroke();
+        }
+
+        // Show a random flirty message
+        function showFlirtyMessage() {
+            // Pick a random message
+            const randomMessage = flirtyMessages[Math.floor(Math.random() * flirtyMessages.length)];
+            
+            // Set the message text
+            flirtyMessageDiv.textContent = randomMessage;
+            
+            // Show the message (and keep it visible)
+            flirtyMessageDiv.classList.add('show-message');
+        }
+
+        // Check collision between player and heart
+        function checkCollision(heart) {
+            return (
+                player.x < heart.x + heart.size &&
+                player.x + player.size > heart.x &&
+                player.y < heart.y + heart.size &&
+                player.y + player.size > heart.y
+            );
+        }
+
+        // Update game state
+        function update() {
+            // Move player
+            if (keys.ArrowUp || keys.w) player.y -= player.speed;
+            if (keys.ArrowDown || keys.s) player.y += player.speed;
+            if (keys.ArrowLeft || keys.a) player.x -= player.speed;
+            if (keys.ArrowRight || keys.d) player.x += player.speed;
+
+            // Keep player in bounds
+            player.x = Math.max(0, Math.min(canvas.width - player.size, player.x));
+            player.y = Math.max(0, Math.min(canvas.height - player.size, player.y));
+
+            // Check heart collisions
+            hearts.forEach(heart => {
+                if (!heart.collected && checkCollision(heart)) {
+                    heart.collected = true;
+                    collectedHearts++;
+                    heartsCounter.textContent = `👨 Hearts Collected: ${collectedHearts} / ${totalHearts}`;
+                    
+                    // Show flirty message
+                    showFlirtyMessage();
+                    
+                    // Check if all hearts collected
+                    if (collectedHearts === totalHearts) {
+                        setTimeout(() => {
+                            revealButton.classList.add('show');
+                        }, 500);
+                    }
+                }
+            });
+        }
+
+        // Draw everything
+        function draw() {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw uncollected hearts
+            hearts.forEach(heart => {
+                if (!heart.collected) {
+                    drawHeart(heart.x, heart.y, heart.size);
+                }
+            });
+
+            // Draw player
+            drawPlayer();
+        }
+
+        // Game loop
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Keyboard event listeners
+        document.addEventListener('keydown', (e) => {
+            if (e.key in keys) {
+                keys[e.key] = true;
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.key in keys) {
+                keys[e.key] = false;
+            }
+        });
+
+        // Reveal button - shows the secret message overlay
+        revealButton.addEventListener('click', () => {
+            revealButton.classList.remove('show');
+            messageOverlay.classList.remove('hidden');
+        });
+
+        // Continue button
+        continueBtn.addEventListener('click', () => {
+            window.location.href = 'gift.html';
+        });
+
+        // Initialize and start game
+        initHearts();
+        gameLoop();
+    </script>
+</body>
+</html>
+
