@@ -63,6 +63,9 @@
             }).catch(() => {
                 window.parent?.postMessage({ type: 'musicStatus', playing: false }, '*');
             });
+        } else {
+            // Send initial status even if not playing
+            window.parent?.postMessage({ type: 'musicStatus', playing: false }, '*');
         }
         
         // Save position very frequently (every 100ms) while playing

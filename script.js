@@ -20,8 +20,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const musicToggle = document.getElementById('musicToggle');
     
     if (audioPlayerFrame && musicToggle) {
-        // Default to muted icon until we know the actual status
-        musicToggle.textContent = '🔇';
+        // Check localStorage directly for immediate button state
+        const isPlaying = localStorage.getItem('ourUniverse_isPlaying') === 'true';
+        musicToggle.textContent = isPlaying ? '🎵' : '🔇';
         
         // Listen for messages from the audio player iframe
         window.addEventListener('message', function(event) {
@@ -43,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (audioPlayerFrame.contentWindow) {
                     audioPlayerFrame.contentWindow.postMessage({ type: 'getMusicStatus' }, '*');
                 }
-            }, 500);
+            }, 100);
         });
     }
 });
