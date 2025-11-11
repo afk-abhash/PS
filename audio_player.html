@@ -20,7 +20,7 @@
         function restorePosition() {
             const savedTime = parseFloat(localStorage.getItem(MUSIC_TIME_KEY));
             const lastUpdate = parseFloat(localStorage.getItem(LAST_UPDATE_KEY));
-            const wasPlaying = localStorage.getItem(MUSIC_PLAYING_KEY) === 'true';
+            const playingState = localStorage.getItem(MUSIC_PLAYING_KEY);
             
             let targetTime = startTime;
             
@@ -28,7 +28,7 @@
                 targetTime = savedTime;
                 
                 // If music was playing, compensate for time elapsed
-                if (wasPlaying && lastUpdate) {
+                if (playingState === 'true' && lastUpdate) {
                     const elapsed = (Date.now() - lastUpdate) / 1000;
                     // More aggressive compensation - add elapsed time if less than 5 seconds
                     if (elapsed < 5) {
@@ -40,7 +40,8 @@
             }
             
             music.currentTime = targetTime;
-            return wasPlaying !== false; // Default to playing
+            // Only autoplay if explicitly set to true (user has started music before)
+            return playingState === 'true';
         }
         
         // Save position frequently
@@ -102,10 +103,12 @@
         
         // Update parent about status changes
         music.addEventListener('play', () => {
+            localStorage.setItem(MUSIC_PLAYING_KEY, 'true');
             window.parent?.postMessage({ type: 'musicStatus', playing: true }, '*');
         });
         
         music.addEventListener('pause', () => {
+            localStorage.setItem(MUSIC_PLAYING_KEY, 'false');
             window.parent?.postMessage({ type: 'musicStatus', playing: false }, '*');
         });
         
