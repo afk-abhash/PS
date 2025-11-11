@@ -20,9 +20,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const musicToggle = document.getElementById('musicToggle');
     
     if (audioPlayerFrame && musicToggle) {
-        // Check localStorage for initial state
-        const wasPlaying = localStorage.getItem('ourUniverse_isPlaying') !== 'false';
-        musicToggle.textContent = wasPlaying ? '🎵' : '🔇';
+        // Default to muted icon until we know the actual status
+        musicToggle.textContent = '🔇';
         
         // Listen for messages from the audio player iframe
         window.addEventListener('message', function(event) {
@@ -38,9 +37,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Ensure iframe loads quickly
+        // Request status update once iframe is loaded
         audioPlayerFrame.addEventListener('load', function() {
-            // Iframe loaded, it will auto-resume from localStorage
+            setTimeout(() => {
+                if (audioPlayerFrame.contentWindow) {
+                    audioPlayerFrame.contentWindow.postMessage({ type: 'getMusicStatus' }, '*');
+                }
+            }, 500);
         });
     }
 });

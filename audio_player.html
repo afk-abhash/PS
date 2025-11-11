@@ -11,7 +11,7 @@
 
     <script>
         const music = document.getElementById('backgroundMusic');
-        const startTime = 100; // 1 minute 25 seconds
+        const startTime = 85; // 1 minute 25 seconds
         const MUSIC_TIME_KEY = 'ourUniverse_musicTime';
         const MUSIC_PLAYING_KEY = 'ourUniverse_isPlaying';
         const LAST_UPDATE_KEY = 'ourUniverse_lastUpdate';
@@ -30,8 +30,11 @@
                 // If music was playing, compensate for time elapsed
                 if (wasPlaying && lastUpdate) {
                     const elapsed = (Date.now() - lastUpdate) / 1000;
-                    if (elapsed < 3) { // Only compensate if less than 3 seconds
+                    // More aggressive compensation - add elapsed time if less than 5 seconds
+                    if (elapsed < 5) {
                         targetTime += elapsed;
+                        // Add a small buffer to account for loading delay (0.2 seconds)
+                        targetTime += 0.2;
                     }
                 }
             }
@@ -42,9 +45,11 @@
         
         // Save position frequently
         function savePosition() {
-            localStorage.setItem(MUSIC_TIME_KEY, music.currentTime.toString());
-            localStorage.setItem(LAST_UPDATE_KEY, Date.now().toString());
-            localStorage.setItem(MUSIC_PLAYING_KEY, (!music.paused).toString());
+            if (!music.paused) {
+                localStorage.setItem(MUSIC_TIME_KEY, music.currentTime.toString());
+                localStorage.setItem(LAST_UPDATE_KEY, Date.now().toString());
+                localStorage.setItem(MUSIC_PLAYING_KEY, 'true');
+            }
         }
         
         // Initialize
@@ -59,12 +64,12 @@
             });
         }
         
-        // Save position every 0.3 seconds while playing
+        // Save position very frequently (every 100ms) while playing
         setInterval(() => {
             if (!music.paused) {
                 savePosition();
             }
-        }, 300);
+        }, 100);
         
         // Loop from 1:25 when song ends
         music.addEventListener('ended', () => {
@@ -82,6 +87,12 @@
                     music.pause();
                 }
                 savePosition();
+                window.parent?.postMessage({ 
+                    type: 'musicStatus', 
+                    playing: !music.paused 
+                }, '*');
+            } else if (event.data.type === 'getMusicStatus') {
+                // Send current status to parent
                 window.parent?.postMessage({ 
                     type: 'musicStatus', 
                     playing: !music.paused 
