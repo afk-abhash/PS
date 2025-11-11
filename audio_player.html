@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Audio Player</title>
+</head>
+<body>
+    <audio id="backgroundMusic" loop preload="auto">
+        <source src="assets/music/M83 - Outro.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const music = document.getElementById('backgroundMusic');
+        const startTime = 100; // 1 minute 25 seconds
+        const MUSIC_TIME_KEY = 'ourUniverse_musicTime';
+        const MUSIC_PLAYING_KEY = 'ourUniverse_isPlaying';
+        const LAST_UPDATE_KEY = 'ourUniverse_lastUpdate';
+        
+        // Restore saved time with compensation for elapsed time
+        function restorePosition() {
+            const savedTime = parseFloat(localStorage.getItem(MUSIC_TIME_KEY));
+            const lastUpdate = parseFloat(localStorage.getItem(LAST_UPDATE_KEY));
+            const wasPlaying = localStorage.getItem(MUSIC_PLAYING_KEY) === 'true';
+            
+            let targetTime = startTime;
+            
+            if (savedTime && savedTime >= startTime) {
+                targetTime = savedTime;
+                
+                // If music was playing, compensate for time elapsed
+                if (wasPlaying && lastUpdate) {
+                    const elapsed = (Date.now() - lastUpdate) / 1000;
+                    if (elapsed < 3) { // Only compensate if less than 3 seconds
+                        targetTime += elapsed;
+                    }
+                }
+            }
+            
+            music.currentTime = targetTime;
+            return wasPlaying !== false; // Default to playing
+        }
+        
+        // Save position frequently
+        function savePosition() {
+            localStorage.setItem(MUSIC_TIME_KEY, music.currentTime.toString());
+            localStorage.setItem(LAST_UPDATE_KEY, Date.now().toString());
+            localStorage.setItem(MUSIC_PLAYING_KEY, (!music.paused).toString());
+        }
+        
+        // Initialize
+        const shouldPlay = restorePosition();
+        
+        // Start playing if should play
+        if (shouldPlay) {
+            music.play().then(() => {
+                window.parent?.postMessage({ type: 'musicStatus', playing: true }, '*');
+            }).catch(() => {
+                window.parent?.postMessage({ type: 'musicStatus', playing: false }, '*');
+            });
+        }
+        
+        // Save position every 0.3 seconds while playing
+        setInterval(() => {
+            if (!music.paused) {
+                savePosition();
+            }
+        }, 300);
+        
+        // Loop from 1:25 when song ends
+        music.addEventListener('ended', () => {
+            music.currentTime = startTime;
+            savePosition();
+            music.play();
+        });
+        
+        // Handle messages from parent
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'toggleMusic') {
+                if (music.paused) {
+                    music.play();
+                } else {
+                    music.pause();
+                }
+                savePosition();
+                window.parent?.postMessage({ 
+                    type: 'musicStatus', 
+                    playing: !music.paused 
+                }, '*');
+            }
+        });
+        
+        // Update parent about status changes
+        music.addEventListener('play', () => {
+            window.parent?.postMessage({ type: 'musicStatus', playing: true }, '*');
+        });
+        
+        music.addEventListener('pause', () => {
+            window.parent?.postMessage({ type: 'musicStatus', playing: false }, '*');
+        });
+        
+        // Save on visibility change
+        document.addEventListener('visibilitychange', savePosition);
+        window.addEventListener('beforeunload', savePosition);
+        window.addEventListener('pagehide', savePosition);
+    </script>
+</body>
+</html>
+

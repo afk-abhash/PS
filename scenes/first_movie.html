@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our First Movie Together 🎬</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .movie-images-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 1.5rem 0;
+        }
+        
+        .movie-image {
+            width: 100%;
+            max-width: 280px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(236, 72, 153, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .movie-image:hover {
+            transform: scale(1.05);
+        }
+        
+        .movie-label {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #ec4899;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+        
+        .movie-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        @media (max-width: 768px) {
+            .movie-image {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="scene-page">
+    <div class="stars-background"></div>
+    
+    <iframe id="audioPlayerFrame" src="../audio_player.html" style="display:none;"></iframe>
+    
+    <a href="../index.html" class="home-button">🏠 Home</a>
+    <button id="musicToggle" class="music-toggle" title="Toggle Music">🎵</button>
+    
+    <div class="scene-container fade-in">
+        <div class="scene-emoji">🎬</div>
+        <h1 class="scene-title">Movie Nights Together</h1>
+        <div class="scene-date">Chainsaw Man & Totoro</div>
+        
+        <div class="movie-images-container">
+            <div class="movie-item">
+                <img src="../assets/chainsaw.png" alt="Chainsaw Man" class="movie-image">
+                <div class="movie-label">Movie #1: Chainsaw Man ⛓️</div>
+            </div>
+            <div class="movie-item">
+                <img src="../assets/totoro.jpeg" alt="My Neighbor Totoro" class="movie-image">
+                <div class="movie-label">Movie #2: Totoro 🌳</div>
+            </div>
+        </div>
+        
+        <div class="scene-content">
+            <p>The movies were only an excuse to sit with you.</p>
+            <p>I just wanted to be with you. Maybe I'll use this excuse again soon 😏</p>
+         </div>
+        
+        <button class="back-button" onclick="window.location.href='../universe.html'">
+            ← Back to Universe
+        </button>
+    </div>
+
+    <script src="../script.js"></script>
+</body>
+</html>
+

@@ -12,14 +12,24 @@
 <body class="landing-page">
     <div class="stars-background"></div>
     
+    <iframe id="audioPlayerFrame" src="audio_player.html" style="display:none;"></iframe>
+    
+    <button id="musicToggle" class="music-toggle" title="Toggle Music">🎵</button>
+    
     <div class="landing-container fade-in">
         <h1 class="title">Hey Priyanka 🌸</h1>
         <p class="subtitle">There's something I wanted to show you…</p>
         <p class="subtitle">✨</p>
         
-        <button class="enter-button pulse" onclick="window.location.href='universe.html'">
-            Click to begin
+        <button class="enter-button pulse" onclick="window.location.href='our_story.html'">
+            Read Our Story
         </button>
+        
+        <div style="margin-top: 1.5rem;">
+            <button class="back-button" onclick="window.location.href='universe.html'">
+                Or explore the planet map
+            </button>
+        </div>
     </div>
 
     <script src="script.js"></script>

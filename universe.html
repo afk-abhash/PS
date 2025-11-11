@@ -12,11 +12,23 @@
 <body class="universe-page">
     <div class="stars-background"></div>
     
+    <iframe id="audioPlayerFrame" src="audio_player.html" style="display:none;"></iframe>
+    
     <a href="index.html" class="home-button">🏠 Home</a>
+    <button id="musicToggle" class="music-toggle" title="Toggle Music">🎵</button>
     
     <div class="universe-container fade-in">
         <h1 class="universe-title">Our Little Universe 🌌</h1>
         <p class="universe-subtitle">Click on each planet to explore our memories</p>
+        
+        <div style="margin: 2rem 0; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="our_story.html" class="special-button" style="display: inline-block; text-decoration: none;">
+                📖 Read Our Full Story
+            </a>
+            <a href="password.html" class="special-button" style="display: inline-block; text-decoration: none; background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);">
+                🔒 Private Memories
+            </a>
+        </div>
         
         <div class="planets-container">
             <a href="scenes/day_we_met.html" class="planet planet-1 float" data-delay="0">
@@ -29,17 +41,22 @@
                 <span class="planet-label">Chinese Food Planet</span>
             </a>
             
-            <a href="scenes/love_quest.html" class="planet planet-3 float" data-delay="0.75">
+            <a href="scenes/first_movie.html" class="planet planet-3 float" data-delay="0.75">
+                <span class="planet-emoji">🎬</span>
+                <span class="planet-label">Movie Nights</span>
+            </a>
+            
+            <a href="scenes/love_quest.html" class="planet planet-4 float" data-delay="1">
                 <span class="planet-emoji">🎮</span>
                 <span class="planet-label">Quest Game</span>
             </a>
             
-            <a href="scenes/gift.html" class="planet planet-4 float" data-delay="1">
+            <a href="scenes/gift.html" class="planet planet-5 float" data-delay="1.25">
                 <span class="planet-emoji">📖</span>
                 <span class="planet-label">The Gift Planet</span>
             </a>
             
-            <a href="scenes/poker.html" class="planet planet-5 float" data-delay="1.5">
+            <a href="scenes/poker.html" class="planet planet-6 float" data-delay="1.5">
                 <span class="planet-emoji">🎴</span>
                 <span class="planet-label">Poker Planet</span>
             </a>

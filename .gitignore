@@ -1,0 +1,14 @@
+# System files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Note: Private photos (assets/US/) ARE included in repo for deployment
+# but are password-protected in the application
+

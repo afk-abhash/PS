@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Story 💖</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .story-page {
+            scroll-behavior: smooth;
+        }
+        
+        .story-section {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 2rem;
+            position: relative;
+        }
+        
+        .story-section:nth-child(even) {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .story-content-wrapper {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 3rem 2rem;
+            box-shadow: 0 20px 60px rgba(236, 72, 153, 0.2);
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+        
+        .story-content-wrapper.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .story-emoji {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .story-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #ec4899;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        
+        .story-date {
+            font-size: 1rem;
+            color: #9ca3af;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .story-text {
+            font-size: 1.2rem;
+            line-height: 2;
+            color: #4b5563;
+            text-align: center;
+        }
+        
+        .story-text p {
+            margin-bottom: 1rem;
+        }
+        
+        .movie-images-wrapper {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+        
+        .movie-item-inline {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .movie-img {
+            width: 100%;
+            max-width: 280px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(236, 72, 153, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .movie-img:hover {
+            transform: scale(1.05);
+        }
+        
+        .movie-caption {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #ec4899;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+        
+        .nav-dots {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 900;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(236, 72, 153, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .nav-dot.active {
+            background: #ec4899;
+            transform: scale(1.3);
+            border-color: rgba(236, 72, 153, 0.3);
+        }
+        
+        .nav-dot:hover {
+            background: #f9a8d4;
+        }
+        
+        @media (max-width: 768px) {
+            .story-section {
+                padding: 3rem 1rem;
+            }
+            
+            .story-content-wrapper {
+                padding: 2rem 1.5rem;
+            }
+            
+            .story-title {
+                font-size: 2rem;
+            }
+            
+            .story-text {
+                font-size: 1rem;
+            }
+            
+            .nav-dots {
+                right: 15px;
+            }
+            
+            .movie-img {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="story-page">
+    <div class="stars-background"></div>
+    
+    <iframe id="audioPlayerFrame" src="audio_player.html" style="display:none;"></iframe>
+    
+    <a href="index.html" class="home-button">🏠 Home</a>
+    <button id="musicToggle" class="music-toggle" title="Toggle Music">🎵</button>
+    
+    <!-- Navigation Dots -->
+    <div class="nav-dots">
+        <div class="nav-dot active" data-section="0" title="The Day We Met"></div>
+        <div class="nav-dot" data-section="1" title="Chinese Food Planet"></div>
+        <div class="nav-dot" data-section="2" title="Movie Nights"></div>
+        <div class="nav-dot" data-section="3" title="The Gift Planet"></div>
+        <div class="nav-dot" data-section="4" title="Poker Planet"></div>
+        <div class="nav-dot" data-section="5" title="The Heart Planet"></div>
+    </div>
+    
+    <!-- Section 1: The Day We Met -->
+    <section class="story-section" id="section-0">
+        <div class="story-content-wrapper visible">
+            <div class="story-emoji">🌍</div>
+            <h1 class="story-title">The Day We Met</h1>
+            <div class="story-date">November 2, 2025</div>
+            
+            <div class="story-text">
+                <p>November 2nd — the day I met you for the first time.</p>
+            <p>I was calm on the outside, but secretly hoping you'd think I was cool 😏</p>
+            <p>Who knew it could feel this nice? 💫<</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Section 2: Chinese Food Planet -->
+    <section class="story-section" id="section-1">
+        <div class="story-content-wrapper">
+            <div class="story-emoji">🍜</div>
+            <h1 class="story-title">Chinese Food Planet</h1>
+            <div class="story-date">A Delicious Memory</div>
+            
+            <div class="story-text">
+                <p>There’s something nice about sharing lunch with someone new.</p>
+                <p>They say good food brings people together, I think they’re absolutely right 🥢✨</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Section 3: Movie Nights -->
+    <section class="story-section" id="section-2">
+        <div class="story-content-wrapper">
+            <div class="story-emoji">🎬</div>
+            <h1 class="story-title">Movies Together</h1>
+            <div class="story-date">Chainsaw Man & Totoro</div>
+            
+            <div class="movie-images-wrapper">
+                <div class="movie-item-inline">
+                    <img src="assets/chainsaw.png" alt="Chainsaw Man" class="movie-img">
+                    <div class="movie-caption">Movie #1: Chainsaw Man ⛓️</div>
+                </div>
+                <div class="movie-item-inline">
+                    <img src="assets/totoro.jpeg" alt="My Neighbor Totoro" class="movie-img">
+                    <div class="movie-caption">Movie #2: Totoro 🌳</div>
+                </div>
+            </div>
+            
+            <div class="story-text">
+                <p>The movies were only an excuse to sit with you.</p>
+                <p>I just wanted to be with you. Maybe I'll use this excuse again soon 😏</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Section 4: The Gift Planet -->
+    <section class="story-section" id="section-3">
+        <div class="story-content-wrapper">
+            <div class="story-emoji">📖</div>
+            <h1 class="story-title">The Gift Planet</h1>
+            <div class="story-date">A Thoughtful Gesture</div>
+            
+            <div class="story-text">
+                <p>You gave me a book, but it was so much more than that.</p>
+                <!-- <p>It was a window into what you thought about, what mattered to you, what you wanted to share.</p> -->
+                <p>Maybe I will get a bookmark next time 😛</p>
+                <p>The best gifts aren't the most expensive unless it's a Range Rover 🏎️🚘🚗🤪 or a Plot of Land 🤣</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Section 5: Poker Planet -->
+    <section class="story-section" id="section-4">
+        <div class="story-content-wrapper">
+            <div class="story-emoji">🎴</div>
+            <h1 class="story-title">Poker Planet</h1>
+            <div class="story-date">Teaching & Learning Together</div>
+            
+            <div class="story-text">
+                <p>Explaining poker to you was one of those moments I'll always remember.</p>
+            <p>Sorry if I confused you (not really😆)</p>
+            <p>It wasn't really about the cards — it was about turing you into a gambling addict and stealing your money 😈</p>
+            <p>That's when I realized: the best conversations happen when someone's genuinely interested in what you have to say 🥺🃏✨</p>
+              </div>
+        </div>
+    </section>
+    
+    <!-- Section 6: The Heart Planet -->
+    <!-- <section class="story-section" id="section-5">
+        <div class="story-content-wrapper">
+            <div class="story-emoji">💖</div>
+            <h1 class="story-title">The Heart Planet</h1>
+            <div class="story-date">Our Little Universe</div>
+            
+            <div class="story-text" style="font-size: 1.3rem; font-weight: 400;">
+                <p>Every memory in this little universe</p>
+                <p>started with that one day, November 2, 2025.</p>
+                <p>Thank you for being part of my life, Priyanka.</p>
+                <p>💖</p>
+            </div>
+        </div>
+    </section> -->
+
+    <script src="script.js"></script>
+    <script>
+        // Scroll reveal animation
+        const observerOptions = {
+            threshold: 0.3,
+            rootMargin: '0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    // Update nav dots
+                    const sectionId = entry.target.id;
+                    const sectionIndex = sectionId.split('-')[1];
+                    document.querySelectorAll('.nav-dot').forEach(dot => {
+                        dot.classList.remove('active');
+                    });
+                    document.querySelector(`.nav-dot[data-section="${sectionIndex}"]`)?.classList.add('active');
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.story-content-wrapper').forEach(wrapper => {
+            observer.observe(wrapper);
+        });
+        
+        // Navigation dots click
+        document.querySelectorAll('.nav-dot').forEach(dot => {
+            dot.addEventListener('click', () => {
+                const sectionIndex = dot.getAttribute('data-section');
+                const section = document.getElementById(`section-${sectionIndex}`);
+                section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+        });
+    </script>
+</body>
+</html>
+
