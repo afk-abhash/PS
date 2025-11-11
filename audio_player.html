@@ -11,57 +11,51 @@
 
     <script>
         const music = document.getElementById('backgroundMusic');
-        const startTime = 85; // 1 minute 25 seconds
+        const startTime = 85; // 1 minute 25 seconds (85 seconds)
         const MUSIC_TIME_KEY = 'ourUniverse_musicTime';
         const MUSIC_PLAYING_KEY = 'ourUniverse_isPlaying';
         const LAST_UPDATE_KEY = 'ourUniverse_lastUpdate';
         
-        // Restore saved time with compensation for elapsed time
-        function restorePosition() {
-            const savedTime = parseFloat(localStorage.getItem(MUSIC_TIME_KEY));
-            const lastUpdate = parseFloat(localStorage.getItem(LAST_UPDATE_KEY));
-            const wasPlaying = localStorage.getItem(MUSIC_PLAYING_KEY) === 'true';
-            
-            let targetTime = startTime;
-            
-            if (savedTime && savedTime >= startTime) {
-                targetTime = savedTime;
-                
-                // If music was playing, compensate for time elapsed
-                if (wasPlaying && lastUpdate) {
-                    const elapsed = (Date.now() - lastUpdate) / 1000;
-                    // More aggressive compensation - add elapsed time if less than 5 seconds
-                    if (elapsed < 5) {
-                        targetTime += elapsed;
-                        // Add a small buffer to account for loading delay (0.2 seconds)
-                        targetTime += 0.2;
-                    }
-                }
-            }
-            
-            music.currentTime = targetTime;
-            return wasPlaying !== false; // Default to playing
-        }
-        
-        // Save position frequently
+        // Save position and state
         function savePosition() {
-            if (!music.paused) {
-                localStorage.setItem(MUSIC_TIME_KEY, music.currentTime.toString());
-                localStorage.setItem(LAST_UPDATE_KEY, Date.now().toString());
-                localStorage.setItem(MUSIC_PLAYING_KEY, 'true');
-            }
+            localStorage.setItem(MUSIC_TIME_KEY, music.currentTime.toString());
+            localStorage.setItem(LAST_UPDATE_KEY, Date.now().toString());
+            localStorage.setItem(MUSIC_PLAYING_KEY, (!music.paused).toString());
         }
         
         // Initialize
-        const shouldPlay = restorePosition();
+        const playingState = localStorage.getItem(MUSIC_PLAYING_KEY);
+        const savedTime = parseFloat(localStorage.getItem(MUSIC_TIME_KEY));
         
-        // Start playing if should play
-        if (shouldPlay) {
+        // Set the time
+        if (savedTime && savedTime >= startTime) {
+            music.currentTime = savedTime;
+        } else {
+            music.currentTime = startTime;
+        }
+        
+        // Auto-play logic:
+        // - If playingState is null (first ever visit): don't play
+        // - If playingState is 'true': continue playing (user started music before)
+        // - If playingState is 'false': user paused, don't play
+        if (playingState === 'true') {
+            // Music was playing - compensate for elapsed time and continue
+            const lastUpdate = parseFloat(localStorage.getItem(LAST_UPDATE_KEY));
+            if (lastUpdate) {
+                const elapsed = (Date.now() - lastUpdate) / 1000;
+                if (elapsed < 5) {
+                    music.currentTime += elapsed + 0.2;
+                }
+            }
+            
             music.play().then(() => {
                 window.parent?.postMessage({ type: 'musicStatus', playing: true }, '*');
             }).catch(() => {
                 window.parent?.postMessage({ type: 'musicStatus', playing: false }, '*');
             });
+        } else {
+            // Not playing (either first visit or user paused)
+            window.parent?.postMessage({ type: 'musicStatus', playing: false }, '*');
         }
         
         // Save position very frequently (every 100ms) while playing
@@ -82,15 +76,30 @@
         window.addEventListener('message', (event) => {
             if (event.data.type === 'toggleMusic') {
                 if (music.paused) {
-                    music.play();
+                    // Starting to play - mark as playing in localStorage
+                    localStorage.setItem(MUSIC_PLAYING_KEY, 'true');
+                    music.play().then(() => {
+                        savePosition();
+                        window.parent?.postMessage({ 
+                            type: 'musicStatus', 
+                            playing: true 
+                        }, '*');
+                    }).catch(() => {
+                        window.parent?.postMessage({ 
+                            type: 'musicStatus', 
+                            playing: false 
+                        }, '*');
+                    });
                 } else {
+                    // Pausing
                     music.pause();
+                    localStorage.setItem(MUSIC_PLAYING_KEY, 'false');
+                    savePosition();
+                    window.parent?.postMessage({ 
+                        type: 'musicStatus', 
+                        playing: false 
+                    }, '*');
                 }
-                savePosition();
-                window.parent?.postMessage({ 
-                    type: 'musicStatus', 
-                    playing: !music.paused 
-                }, '*');
             } else if (event.data.type === 'getMusicStatus') {
                 // Send current status to parent
                 window.parent?.postMessage({ 
@@ -102,10 +111,13 @@
         
         // Update parent about status changes
         music.addEventListener('play', () => {
+            localStorage.setItem(MUSIC_PLAYING_KEY, 'true');
             window.parent?.postMessage({ type: 'musicStatus', playing: true }, '*');
         });
         
         music.addEventListener('pause', () => {
+            localStorage.setItem(MUSIC_PLAYING_KEY, 'false');
+            savePosition();
             window.parent?.postMessage({ type: 'musicStatus', playing: false }, '*');
         });
         
