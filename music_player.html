@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎵 Music Player</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #fce7f3 0%, #e0f2fe 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .player-container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 3rem;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(236, 72, 153, 0.3);
+        }
+        
+        .player-icon {
+            font-size: 5rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+        
+        h1 {
+            color: #ec4899;
+            font-size: 2rem;
+            margin: 1rem 0;
+        }
+        
+        p {
+            color: #6b7280;
+            font-size: 1rem;
+        }
+        
+        .controls {
+            margin-top: 2rem;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #f9a8d4 0%, #ec4899 100%);
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            font-weight: 600;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <audio id="musicPlayer" loop>
+        <source src="assets/music/M83 - Outro.mp3" type="audio/mpeg">
+    </audio>
+    
+    <div class="player-container">
+        <div class="player-icon">🎵</div>
+        <h1>Music Playing</h1>
+        <p>M83 - Outro</p>
+        <p style="font-size: 0.9rem; margin-top: 1rem;">This song reminds me of you</p>
+        
+        <div class="controls">
+            <button id="toggleBtn" onclick="toggleMusic()">Play</button>
+        </div>
+    </div>
+
+    <script>
+        const music = document.getElementById('musicPlayer');
+        const toggleBtn = document.getElementById('toggleBtn');
+        const icon = document.querySelector('.player-icon');
+        const startTime = 85; // 1 minute 25 seconds
+        
+        // Set start time and play
+        music.currentTime = startTime;
+        music.play();
+        
+        // Loop from 1:25
+        music.addEventListener('ended', () => {
+            music.currentTime = startTime;
+            music.play();
+        });
+        
+        // Toggle play/pause
+        function toggleMusic() {
+            if (music.paused) {
+                music.play();
+                toggleBtn.textContent = 'Pause';
+                icon.textContent = '🎵';
+            } else {
+                music.pause();
+                toggleBtn.textContent = 'Play';
+                icon.textContent = '🔇';
+            }
+        }
+        
+        // Update UI based on music state
+        music.addEventListener('play', () => {
+            toggleBtn.textContent = 'Pause';
+            icon.textContent = '🎵';
+        });
+        
+        music.addEventListener('pause', () => {
+            toggleBtn.textContent = 'Play';
+            icon.textContent = '🔇';
+        });
+        
+        // Notify opener window that music started
+        if (window.opener && !window.opener.closed) {
+            window.opener.postMessage({ type: 'musicStarted' }, '*');
+        }
+    </script>
+</body>
+</html>
+

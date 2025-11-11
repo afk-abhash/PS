@@ -6,7 +6,10 @@ function showAdventureMessage() {
     }
 }
 
-// Background music management with persistent iframe player
+// Music player in separate tab
+let musicWindow = null;
+
+// Background music management with separate tab
 document.addEventListener('DOMContentLoaded', function() {
     // Add floating animation delays to planets
     const planets = document.querySelectorAll('.planet');
@@ -15,36 +18,46 @@ document.addEventListener('DOMContentLoaded', function() {
         planet.style.animationDelay = delay + 's';
     });
     
-    // Handle persistent audio player
-    const audioPlayerFrame = document.getElementById('audioPlayerFrame');
+    // Handle music toggle button
     const musicToggle = document.getElementById('musicToggle');
     
-    if (audioPlayerFrame && musicToggle) {
-        // Default to muted icon until we know the actual status
-        musicToggle.textContent = '🔇';
+    if (musicToggle) {
+        // Check if music window exists
+        const musicWindowOpen = sessionStorage.getItem('musicWindowOpen') === 'true';
+        musicToggle.textContent = musicWindowOpen ? '🎵' : '🔇';
         
-        // Listen for messages from the audio player iframe
-        window.addEventListener('message', function(event) {
-            if (event.data.type === 'musicStatus') {
-                musicToggle.textContent = event.data.playing ? '🎵' : '🔇';
-            }
-        });
-        
-        // Music toggle button
+        // Music toggle button - opens new tab or closes it
         musicToggle.addEventListener('click', function() {
-            if (audioPlayerFrame.contentWindow) {
-                audioPlayerFrame.contentWindow.postMessage({ type: 'toggleMusic' }, '*');
+            if (!musicWindow || musicWindow.closed) {
+                // Open music player in new tab
+                musicWindow = window.open('music_player.html', 'MusicPlayer', 'width=400,height=500');
+                sessionStorage.setItem('musicWindowOpen', 'true');
+                musicToggle.textContent = '🎵';
+            } else {
+                // Close music window
+                musicWindow.close();
+                musicWindow = null;
+                sessionStorage.setItem('musicWindowOpen', 'false');
+                musicToggle.textContent = '🔇';
             }
         });
         
-        // Request status update once iframe is loaded
-        audioPlayerFrame.addEventListener('load', function() {
-            setTimeout(() => {
-                if (audioPlayerFrame.contentWindow) {
-                    audioPlayerFrame.contentWindow.postMessage({ type: 'getMusicStatus' }, '*');
-                }
-            }, 500);
+        // Listen for messages from music player
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'musicStarted') {
+                musicToggle.textContent = '🎵';
+                sessionStorage.setItem('musicWindowOpen', 'true');
+            }
         });
+        
+        // Check if window is still open periodically
+        setInterval(() => {
+            if (musicWindow && musicWindow.closed) {
+                musicWindow = null;
+                sessionStorage.setItem('musicWindowOpen', 'false');
+                musicToggle.textContent = '🔇';
+            }
+        }, 1000);
     }
 });
 
