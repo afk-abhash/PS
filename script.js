@@ -21,13 +21,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (audioPlayerFrame && musicToggle) {
         // Check localStorage directly for immediate button state
-        const isPlaying = localStorage.getItem('ourUniverse_isPlaying') === 'true';
-        musicToggle.textContent = isPlaying ? '🎵' : '🔇';
+        const isMuted = localStorage.getItem('ourUniverse_isMuted') === 'true';
+        musicToggle.textContent = isMuted ? '🔇' : '🎵';
         
         // Listen for messages from the audio player iframe
         window.addEventListener('message', function(event) {
             if (event.data.type === 'musicStatus') {
-                musicToggle.textContent = event.data.playing ? '🎵' : '🔇';
+                musicToggle.textContent = event.data.muted ? '🔇' : '🎵';
             }
         });
         
